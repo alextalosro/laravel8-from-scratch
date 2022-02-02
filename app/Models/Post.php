@@ -9,14 +9,16 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
-    //wprotected $fillable = ['title', 'excerpt', 'body'];
+    protected $guarded = [];
 
     protected $with = ['category', 'author'];
 
-    public function getRouteKeyName()
+    public function scopeFilter($query, array $filters) //Post::newQuery() ->filter()
     {
-        return 'slug';
+        $query->when($filters['search'] ?? false, fn ($query, $search) =>
+        $query
+            ->where('title', 'like', '%' . $search . '%')
+            ->orWhere('body', 'like', '%' . $search . '%'));
     }
 
     public function category()
