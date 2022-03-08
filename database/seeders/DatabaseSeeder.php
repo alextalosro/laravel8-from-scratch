@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Database\Seeder;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name'=>'John Doe'
         ]);
+
         Post::factory(30)->create([
             'user_id'=>$user->id
         ]);
