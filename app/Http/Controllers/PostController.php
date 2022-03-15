@@ -24,25 +24,4 @@ class PostController extends Controller
         ]);
     }
 
-    public function create(): View
-    {
-        return view('posts.create');
-    }
-
-    public function store()
-    {
-        $attributes = request()->validate([
-            'title' => 'required',
-            'slug' => ['required', Rule::unique('posts', 'slug')],
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => ['required', Rule::exists('categories', 'id')]
-        ]);
-
-        $attributes['user_id'] = auth()->id();
-
-        Post::create($attributes);
-
-        return redirect('/'); // better redirect to post itself
-    }
 }
