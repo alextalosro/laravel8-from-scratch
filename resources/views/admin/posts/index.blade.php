@@ -30,6 +30,27 @@
                                             <button class="text-xs text-gray-400">Delete</button>
                                         </form>
                                     </td>
+
+                                    @if($post->is_published)
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <form method="POST" action="/admin/posts/publish/{{ $post->id }}">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button class="text-xs text-white bg-green-500 rounded-full py-0.4 px-1">Published</button>
+                                            </form>
+                                        </td>
+                                    @else
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <form method="POST" action="/admin/posts/publish/{{ $post->id}}">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <button class="text-xs text-white bg-red-500 rounded-full py-0.4 px-1">Unpublished</button>
+                                            </form>
+                                        </td>
+                                    @endif
+
                                 </tr>
                             @endforeach
                             </tbody>

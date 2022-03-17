@@ -9,15 +9,13 @@
             <x-form.input name="slug" :value="old('slug', $post->slug)"/>
             <div class="flex mt-6">
                 <div class="flex-1">
-                    <x-form.input name="thumbnail" type="file" :value="old('thumbnail', $post->thumbnail)" />
+                    <x-form.input name="thumbnail" type="file" :value="old('thumbnails', $post->thumbnail)" />
                 </div>
 
                 <img src="{{ asset('/storage/' . $post->thumbnail) }}" alt="" class="rounded-xl ml-6" width="100">
             </div>
             <x-form.textarea name="excerpt">{{ old('excerpt', $post->excerpt) }}</x-form.textarea>
             <x-form.textarea name="body">{{ old('body', $post->body) }}</x-form.textarea>
-
-
 
             <x-form.field>
                 <x-form.label name="category"/>
@@ -35,10 +33,23 @@
 
             </x-form.field>
 
+            <x-form.field>
+                <x-form.label name="author"/>
+
+                <select name="user_id">
+                    @foreach(\App\Models\User::all() as $user)
+                        <option
+                            value="{{ $user->id }}"
+                            {{ old('user_id', $post->user_id) == $user->id ? 'selected' : ''}}
+                        >{{ ucwords($user->name) }}</option>
+                    @endforeach
+                </select>
+
+                <x-form.error name="{{ 'user' }}"/>
+
+            </x-form.field>
 
             <x-form.button>Update</x-form.button>
-
-
 
         </form>
     </x-setting>

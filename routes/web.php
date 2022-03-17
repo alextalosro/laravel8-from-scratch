@@ -4,7 +4,9 @@
     use App\Http\Controllers\NewsletterController;
     use App\Http\Controllers\PostCommentsController;
     use App\Http\Controllers\RegisterController;
+    use App\Http\Controllers\RssFeedController;
     use App\Http\Controllers\SessionsController;
+    use App\Http\Controllers\UserController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\PostController;
 
@@ -29,6 +31,14 @@
 
     Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth');
 
+    Route::get('/feed', [RssFeedController::class, 'create'])->name('file');
+
+
+
+    Route::get('/account/{user}/edit', [UserController::class, 'edit'])->middleware('auth');
+    Route::patch('/account/{user}', [UserController::class, 'update'])->middleware('auth');
+
+
 
     // Admin
     Route::middleware('can:admin')->group(function (){
@@ -40,6 +50,7 @@
 //        Route::get('admin/posts/{post}/edit', [AdminPostController::class, 'edit']);
 //        Route::patch('admin/posts/{post}', [AdminPostController::class, 'update']);
 //        Route::delete('admin/posts/{post}', [AdminPostController::class, 'destroy']);
+        Route::patch('admin/posts/publish/{post}',[AdminPostController::class, 'publish'])->middleware('can:admin');
     });
 
 
