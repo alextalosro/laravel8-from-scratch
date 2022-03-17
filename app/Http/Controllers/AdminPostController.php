@@ -23,13 +23,14 @@
 
         public function store()
         {
+
             Post::create(array_merge($this->validatePost(), [
                 'user_id' => request()->user()->id,
-                'thumbnail' => request()->file('thumbnail')->store('thumbnails')
-
+                'thumbnail' => request()->file('thumbnail')->store('thumbnails'),
+                'view_count' => 0
             ]));
 
-            return redirect('/'); // better redirect to post itself
+            return redirect('/');
         }
 
         public function edit(Post $post)
@@ -39,15 +40,18 @@
 
         public function update(Post $post)
         {
+
             $attributes = $this->validatePost($post);
 
             if (isset($attributes['thumbnail'])) {
-                $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnail');
+                $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
             }
 
             $post->update($attributes);
 
-            return back()->with('success', 'Post updated!');
+            return view('admin.posts.index', [
+                'posts' => Post::paginate(50)
+            ]);
         }
 
         public function destroy(Post $post)
@@ -57,18 +61,25 @@
             return back()->with('success', 'Post Deleted!');
         }
 
+        public function publish(Post $post)
+        {
+            ($post->is_published ? $post->update(['is_published'=>0]) : $post->update(['is_published'=>1]));
+
+            return back()->with('success', 'Post Updated!');
+        }
+
         protected function validatePost(?Post $post = null): array
         {
             $post ??= new Post();
 
             return request()->validate([
                 'title' => 'required',
-                'thumbnail' => $post->exists ? ['image'] : ['required|image'],
+                'thumbnail' => $post->exists ? ['image'] : ['required', 'image'],
                 'slug' => ['required', Rule::unique('posts', 'slug')->ignore($post)],
                 'excerpt' => 'required',
                 'body' => 'required',
                 'category_id' => ['required', Rule::exists('categories', 'id')],
-                'published_at' => 'required'
             ]);
+
         }
     }

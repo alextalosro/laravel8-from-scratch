@@ -46,6 +46,7 @@ namespace App\Models{
  * @property string $excerpt
  * @property string $body
  * @property string|null $published_at
+ * @property boolean $is_published
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $author
